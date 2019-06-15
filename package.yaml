@@ -1,0 +1,58 @@
+name:                intellij-haskell
+version:             0.1.0.0
+github:              "Github username here/intellij-haskell"
+license:             BSD3
+author:              "Author name here"
+maintainer:          "Author email here"
+copyright:           "2018 Author name here"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            App category here
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/Github username here/intellij-haskell#readme>
+
+dependencies:
+- amazonka
+- amazonka-core
+- amazonka-glue
+- amazonka-s3
+- base >= 4.7 && < 5
+- conduit
+- graphviz
+- graphite
+- lens
+- text
+
+
+library:
+  source-dirs: src
+
+executables:
+  intellij-haskell-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - intellij-haskell
+
+tests:
+  intellij-haskell-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - intellij-haskell

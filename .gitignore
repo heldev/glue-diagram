@@ -1,0 +1,6 @@
+.idea/
+.stack-work/
+intellij-haskell.cabal
+intellij-haskell.iml
+out/
+*~
