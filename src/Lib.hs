@@ -2,7 +2,7 @@
 {-# LANGUAGE Rank2Types #-}
 
 module Lib
-    ( listAllTriggers
+    ( plotGlueDags
     ) where
 
 import Control.Lens
@@ -79,20 +79,20 @@ import Data.GraphViz
 import qualified Data.GraphViz.Attributes.Complete as AC
 import qualified Data.GraphViz.Attributes as A
 
-listAllTriggers :: IO ()
-listAllTriggers = do
+plotGlueDags :: FilePath -> Text -> Text -> IO ()
+plotGlueDags output prefix suffix = do
     env <- newEnv Discover
 
     jobs <- runResourceT . runAWST env $ runConduit $ paginate getTriggers
         .| concatMapC (view gttrsTriggers)
-        .| filterC (doesNameMatchPrefixAnsSuffix "appliances-reliability-" "-development")
+        .| filterC (doesNameMatchPrefixAnsSuffix prefix suffix)
         .| concatMapC (toArcs normalizeName)
         .| sinkList
 
-    liftIO $ plot "appliances-reliability-development.png" jobs
+    liftIO $ plot output jobs
 
     where
-        normalizeName name = fromMaybe "*" $ stripPrefix "appliances-reliability-" name >>= stripSuffix "-development"
+        normalizeName name = fromMaybe "*" $ stripPrefix prefix name >>= stripSuffix suffix
 
 
 doesNameMatchPrefixAnsSuffix :: Text -> Text -> Trigger -> Bool
@@ -124,7 +124,7 @@ plot file edges =
         params = defaultParams
             { globalAttributes =
                 [ GraphAttrs
-                    [ AC.RankDir AC.FromLeft
+                    [ AC.RankDir AC.FromTop
                     ]
                 , NodeAttrs
                     [ A.shape AC.BoxShape
